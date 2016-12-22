@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<script src="app.js"></script>
+<script>
+//这里创建一个webworker就是开一个新的线程
+var worker = new Worker('app.js'); //创建子线程
+//这里接收新的线程传来的data
+worker.onmessage = function(event) {
+    console.log('---', event.data);
+};
+//这个将会触发向子进程的请求
+worker.postMessage("begin");
+
+var i = 0,
+    time = 1000; // 3000
+//构造一个无限循环
+setTimeout(function() {
+    while (i < 5) {
+        i++;
+        console.log('---==', i)
+    }
+}, time);
+</script>
+
+<body>
+	<a href="http://plnkr.co/edit/jBWxVmH1kMONkFf0UtGh">threadjs demo</a>
+    <div>JavaScript引擎是单线程的，事件触发排队等候。所有任务按照触发时间先后排队处理。 在1000ms之后，setTimeout函数也加入队列。 while(t){ }无限循环阻塞了单线程，不管排到后面的代码执行时间有多短，后面的代码无法执行，一直阻塞下去。
+    </div>
+</body>
+
+</html>

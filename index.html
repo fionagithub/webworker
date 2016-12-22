@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>ng-webworker demo</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+    <script src="http://mattslocum.github.io/ng-webworker/bower_components/ng-webworker/src/ng-webworker.js"></script>
+    <script src="js/demo.js"></script>
+    <script type="text/javascript" src='https://www.google-analytics.com/ga.js'>
+    </script>
+    <script type="text/javascript">
+    /*  为了获取用户访问网站的统计信息，使用了google-analytics的ga.js*/
+    try {
+        var pageTracker = _gat._getTracker("UA-60741296-1");
+        pageTracker._trackPageview();
+    } catch (err) {}
+    </script>
+</head>
+
+<body data-ng-app="demo">
+    <div class="navbar navbar-inverse " role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <a href="../"><span class="navbar-brand">ng-webworker</span></a>
+            </div>
+        </div>
+    </div>
+    <div class="container form-inline" data-ng-controller="demoCtrl">
+        <div class="jumbotron">
+            <h1>ng-webworker</h1>
+            <div>
+                <p>
+                    Web Worker在这类耗时计算密集型操作中，显得特别实用。
+                </p>
+                <ul>
+                    <li>可以加载一个JS进行大量的复杂计算而不挂起主进程，并通过postMessage，onmessage进行通信； </li>
+                    <li>通过importScripts(url)加载另外的脚本文件；</li>
+                    <li>
+                        可以在worker中 可以使用 setTimeout()，clearTimeout()，setInterval()，clearInterval()；
+                    </li>
+                    <li> 可以使用XMLHttpRequest来发送请求，以及访问navigator的部分属性</li>
+                </ul>
+            </div>
+            <div>
+                <p>
+                    Web Worker限制： </p>
+                <ul>
+                    <li>不能加载跨域的JavaScript文件；</li>
+                    <li>
+                        考虑到JavaScript操作DOM的安全性问题，在Web Worker中不能访问界面中的DOM信息，对于DOM的访问操作都必须委托给JavaScript主线程来操作；
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="page-header">
+            <h2>The non-angular way (pure js)</h2>
+        </div>
+        <h4>browser code</h4>
+        <p>
+            <input type="text" class="form-control" data-ng-model="value" />
+            <button type="button" class="btn btn-primary" data-ng-click="pureJSWorker()">Double it</button>
+        </p>
+        <div class="page-header">
+            <h1>ng-webworker way</h1>
+        </div>
+        <h2>Simple function</h2>
+        <p>
+            <input type="text" class="form-control" data-ng-model="value" />
+            <button type="button" class="btn btn-primary" data-ng-click="functionWorker()">Double it</button>
+        </p>
+        <br/>
+        <h2>External file</h2>
+        <p>
+            <input type="text" class="form-control" data-ng-model="value" />
+            <button type="button" class="btn btn-primary" data-ng-click="externalWorker()">Double it</button>
+        </p>
+        <br/>
+        <h2>Async function</h2>
+        <p>
+            <input type="text" class="form-control" data-ng-model="value" />
+            <button type="button" class="btn btn-primary" data-ng-click="asyncWorker()">Async it</button>
+        </p>
+        <div class="progress">
+            <div class="progress-bar" data-ng-class="{'progress-bar-striped': !asyncDone, active: !asyncDone, 'progress-bar-success': asyncDone }" data-ng-style="{'width': asyncProgress + '%'}">
+                <span ng-show="asyncDone">done</span>
+            </div>
+        </div>
+        <br/>
+        <h2>Image processing demo</h2>
+        <p><img data-ng-src="{{image}}" /></p>
+        <p>
+            <input type="text" class="form-control" data-ng-model="value" />
+            <button type="button" class="btn btn-primary" data-ng-click="blurImage()">Gaussian Blur Image</button>
+            <button type="button" class="btn btn-default" data-ng-click="resetImage()">Reset Image</button>
+            <button type="button" class="btn btn-default" data-ng-click="stopImage()">Stop</button>
+        </p>
+        <div class="progress">
+            <div class="progress-bar" data-ng-class="{'progress-bar-striped': !imageDone, active: !imageDone, 'progress-bar-success': imageDone }" data-ng-style="{'width': imageProgress + '%'}">
+                <span ng-show="imageDone">{{iImageTime}}</span>
+            </div>
+        </div>
+        <br/>
+        <h2>RequireJS within webworker</h2>
+        <p>
+            <input type="text" class="form-control" ng-model="numList" />
+            <button type="button" class="btn btn-primary" ng-click="requireDemo()">Sum numbers</button>
+        </p>
+    </div>
+</body>
+
+</html>
